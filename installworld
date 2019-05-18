@@ -7,6 +7,9 @@ BASEDIR="${BASEDIR:-$(dirname -- $0)}"
 BASEDIR="`readlink -f -- "${BASEDIR}"`"
 
 tempfoo=`basename "${0}"`
+
+. "${BASEDIR}/makeargs/${tempfoo}.sub"
+
 DESTDIR="`mktemp -d -t "${tempfoo}"`" || exit 1
 export DESTDIR
 
@@ -21,9 +24,9 @@ export WRAPSCRIPT
 echo "set -e" > "${WRAPSCRIPT}"
 chmod 755 "${WRAPSCRIPT}"
 
-make INSTALL="${BASEDIR}/wrappers/install" MTREE_CMD="${BASEDIR}/wrappers/mtree" \
- MAKEWHATIS="${BASEDIR}/wrappers/gencmd makewhatis" DESTDIR="${DESTDIR}" "${@}" \
- ${tempfoo}
+IFS=$'\n'
+MAKE_ARGS=`gen_make_args`
+make ${MAKE_ARGS} DESTDIR="${DESTDIR}" "${@}" "${tempfoo}"
 chmod 755 "${WRAPDIR}"
 
 echo "echo \"${tempfoo} completed successfully.\"" >> "${WRAPSCRIPT}"

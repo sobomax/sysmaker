@@ -1,0 +1,7 @@
+gen_make_args() {
+  for arg in INSTALL="${BASEDIR}/wrappers/install" MTREE_CMD="${BASEDIR}/wrappers/mtree" \
+   MAKEWHATIS="${BASEDIR}/wrappers/gencmd makewhatis"
+  do
+    printf '%s\n' "${arg}"
+  done
+}
