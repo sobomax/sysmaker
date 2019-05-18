@@ -1,0 +1,40 @@
+#!/bin/sh
+
+set -e
+
+firstnargs() {
+  i=0
+  nargs="${1}"
+  shift
+  while [ ${i} -lt ${nargs} ]
+  do
+    if [ ${i} -gt 0 ]
+    then
+      printf ' '
+    fi
+    printf '%s' "$1"
+    shift
+    i=$((${i} + 1))
+  done
+}
+
+ntharg() {
+  shift $1
+  printf '%s\n' "$1"
+}
+
+tempfoo=`/usr/bin/basename $0`
+TMPFILE=`/usr/bin/mktemp -t ${tempfoo}` || exit 1
+cat > "${TMPFILE}"
+
+MFNAME="`/sbin/md5 -q "${TMPFILE}"`"
+MFILE="${WRAPDIR}/${MFNAME}"
+mv "${TMPFILE}" "${MFILE}"
+
+dname="`ntharg ${#} "${@}" | sed "s|^${DESTDIR}|\$\{DESTDIR\}|"`"
+printf 'if [ ! -e "%s" ]; then mkdir "%s"; fi\n' "${dname}" "${dname}" >> "${WRAPSCRIPT}"
+
+printf 'mtree -f "%s" ' "${MFNAME}" >> "${WRAPSCRIPT}"
+firstnargs $((${#} - 1)) "${@}" >> "${WRAPSCRIPT}"
+printf ' "%s"\n' "${dname}" >> "${WRAPSCRIPT}"
+exec echo mtree "${@}"

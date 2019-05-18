@@ -1,0 +1,24 @@
+#!/bin/sh
+
+set -e
+
+cmd="${1}"
+shift
+
+filterargs() {
+  i=0
+  nargs="${1}"
+  shift
+  while [ ${i} -lt ${nargs} ]
+  do
+    farg="`echo "${1}" | sed "s|^${DESTDIR}|\$\{DESTDIR\}|"`"
+    printf ' "%s"' "${farg}"
+    shift
+    i=$((${i} + 1))
+  done
+}
+
+printf '%s' "${cmd}" >> "${WRAPSCRIPT}"
+filterargs "${#}" "${@}" >> "${WRAPSCRIPT}"
+printf '\n' >> "${WRAPSCRIPT}"
+exec echo "${cmd}" "${@}"

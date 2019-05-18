@@ -1,0 +1,34 @@
+#!/bin/sh
+
+set -e
+#set -x
+
+BASEDIR="${BASEDIR:-$(dirname -- $0)}"
+BASEDIR="`readlink -f -- "${BASEDIR}"`"
+
+tempfoo=`basename "${0}"`
+DESTDIR="`mktemp -d -t "${tempfoo}"`" || exit 1
+export DESTDIR
+
+WRAPDIR="`mktemp -d "${DESTDIR}/${tempfoo}.wrap"`" || exit 1
+export WRAPDIR
+
+WSNAME="install.sh"
+
+WRAPSCRIPT="${WRAPDIR}/${WSNAME}"
+export WRAPSCRIPT
+
+echo "set -e" > "${WRAPSCRIPT}"
+chmod 755 "${WRAPSCRIPT}"
+
+make INSTALL="${BASEDIR}/wrappers/install" MTREE_CMD="${BASEDIR}/wrappers/mtree" \
+ MAKEWHATIS="${BASEDIR}/wrappers/gencmd makewhatis" DESTDIR="${DESTDIR}" "${@}" \
+ ${tempfoo}
+chmod 755 "${WRAPDIR}"
+
+echo "echo \"${tempfoo} completed successfully.\"" >> "${WRAPSCRIPT}"
+
+COMPRESS_CMD="xz -T0 -v" UNCOMPRESS_CMD="xz -T0 -d" /usr/home/sobomax/projects/makeself/makeself.sh \
+ --xz --tar-quietly ${DESTDIR}/${tempfoo}.wrap /tmp/${tempfoo}.wrap.sh \
+ "${tempfoo} Package" "./${WSNAME}"
+rm -rf "${DESTDIR}"
