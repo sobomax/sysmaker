@@ -1,0 +1,10 @@
+gen_make_args() {
+  _WD="${BASEDIR}/wrappers"
+  _GCMD="${_WD}/gencmd"
+  for arg in INSTALL="${_WD}/install" MTREE_CMD="${_WD}/mtree" \
+   PDW_MKDB_CMD="${_GCMD} pwd_mkdb" CAP_MKDB_CMD="${_GCMD} cap_mkdb" \
+   SERVICES_MKDB_CMD="${_GCMD} services_mkdb"
+  do
+    printf '%s\n' "${arg}"
+  done
+}

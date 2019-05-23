@@ -26,6 +26,14 @@ chmod 755 "${WRAPSCRIPT}"
 
 IFS=$'\n'
 MAKE_ARGS=`gen_make_args`
+if [ "${tempfoo}" = "distribution" ]
+then
+  make ${MAKE_ARGS} WITHOUT_PROFILE=y WITHOUT_DEBUG_FILES=y \
+   WITHOUT_TESTS=y WITHOUT_MAN=y WITHOUT_INCLUDES=y \
+   INSTALL="${BASEDIR}/wrappers/gencmd echo" \
+   DESTDIR="${DESTDIR}" installworld
+  echo "set -e" > "${WRAPSCRIPT}"
+fi
 make ${MAKE_ARGS} DESTDIR="${DESTDIR}" "${@}" "${tempfoo}"
 chmod 755 "${WRAPDIR}"
 
