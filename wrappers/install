@@ -10,6 +10,23 @@ ntharg() {
   printf '%s\n' "$1"
 }
 
+firstnargs_fltrd() {
+  i=0
+  nargs="${1}"
+  shift
+  while [ ${i} -lt ${nargs} ]
+  do
+    if [ ${i} -gt 0 ]
+    then
+      printf ' '
+    fi
+    farg="`echo "${1}" | sed "s|^${DESTDIR}|\$\{DESTDIR\}|"`"
+    printf '"%s"' "${farg}"
+    shift
+    i=$((${i} + 1))
+  done
+}
+
 firstnargs() {
   i=0
   nargs="${1}"
@@ -20,7 +37,7 @@ firstnargs() {
     then
       printf ' '
     fi
-    printf '%s' "$1"
+    printf '%s' "${1}"
     shift
     i=$((${i} + 1))
   done
@@ -81,6 +98,24 @@ case "${1}" in
   fi
   ;;
 *)
+  if [ "${1}" = "-N" ]
+  then
+    N_dir="${2}"
+    N_dirhash="`md5 -q -s "${N_dir}"`"
+    N_ndir="${WRAPDIR}/${N_dirhash}"
+    if [ ! -e "${N_ndir}" ]
+    then
+      mkdir "${N_ndir}"
+      for f in "group" "master.passwd"
+      do
+        install -m 644 "${N_dir}/${f}" "${N_ndir}"
+      done
+    fi
+    icmd="install -N \"${N_dirhash}\" "
+    shift 2
+  else
+    icmd="install "
+  fi
   nsrcs=0
   while [ ${nsrcs} -lt $((${#} - 1)) ]
   do
@@ -121,14 +156,14 @@ case "${1}" in
         install -m 644 -s "${src}" "${src_n}"
       fi
       printf 'install ' >> "${WRAPSCRIPT}"
-      firstnargs $((${#} - ${nsrcs} - 1)) "${@}" >> "${WRAPSCRIPT}"
+      firstnargs_fltrd $((${#} - ${nsrcs} - 1)) "${@}" >> "${WRAPSCRIPT}"
       printf ' "%s"' "${src_nshrt}" >> "${WRAPSCRIPT}"
       _nsrcs=$((${_nsrcs} - 1))
       printf ' "%s"\n' "${tgt}" >> "${WRAPSCRIPT}"
     done
   else
-    printf 'install ' >> "${WRAPSCRIPT}"
-    firstnargs $((${#} - 1)) "${@}" >> "${WRAPSCRIPT}"
+    echo -n "${icmd}" >> "${WRAPSCRIPT}"
+    firstnargs_fltrd $((${#} - 1)) "${@}" >> "${WRAPSCRIPT}"
     printf ' "%s"\n' "${tgt}" >> "${WRAPSCRIPT}"
   fi
   ;;
