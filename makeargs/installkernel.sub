@@ -1,6 +1,6 @@
 gen_make_args() {
   for arg in INSTALL="${BASEDIR}/wrappers/install" MTREE_CMD="${BASEDIR}/wrappers/mtree" \
-   KLDXREF="${BASEDIR}/wrappers/gencmd kldxref"
+   KLDXREF_CMD="${BASEDIR}/wrappers/gencmd kldxref"
   do
     printf '%s\n' "${arg}"
   done
