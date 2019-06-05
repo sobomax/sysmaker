@@ -1,0 +1,1 @@
+ln -sf /etc "${WRAPDIR}/etc"

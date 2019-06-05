@@ -23,6 +23,19 @@ ntharg() {
   printf '%s\n' "$1"
 }
 
+hasarg() {
+  argn="${1}"
+  shift
+  for arg in "${@}"
+  do
+    if [ "${argn}" = "${arg}" ]
+    then
+      return 0
+    fi
+  done
+  return 1
+}
+
 tempfoo=`/usr/bin/basename $0`
 TMPFILE=`/usr/bin/mktemp -t ${tempfoo}` || exit 1
 cat > "${TMPFILE}"
@@ -34,7 +47,13 @@ mv "${TMPFILE}" "${MFILE}"
 dname="`ntharg ${#} "${@}" | sed "s|^${DESTDIR}|\$\{DESTDIR\}|"`"
 printf 'if [ ! -e "%s" ]; then mkdir "%s"; fi\n' "${dname}" "${dname}" >> "${WRAPSCRIPT}"
 
-printf 'mtree -f "%s" ' "${MFNAME}" >> "${WRAPSCRIPT}"
+if hasarg -N "${@}"
+then
+  mcmd="mtree"
+else
+  mcmd="mtree -N etc"
+fi
+printf '%s -f "%s" ' "${mcmd}" "${MFNAME}" >> "${WRAPSCRIPT}"
 firstnargs $((${#} - 1)) "${@}" >> "${WRAPSCRIPT}"
 printf ' "%s"\n' "${dname}" >> "${WRAPSCRIPT}"
-exec echo mtree "${@}"
+exec mtree -f "${MFILE}" "${@}"

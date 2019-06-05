@@ -26,15 +26,19 @@ chmod 755 "${WRAPSCRIPT}"
 
 IFS=$'\n'
 MAKE_ARGS=`gen_make_args`
-if [ "${tempfoo}" = "distribution" ]
+
+if [ -e "${BASEDIR}/before/${tempfoo}.sub" ]
 then
-  make ${MAKE_ARGS} WITHOUT_PROFILE=y WITHOUT_DEBUG_FILES=y \
-   WITHOUT_TESTS=y WITHOUT_MAN=y WITHOUT_INCLUDES=y \
-   INSTALL="${BASEDIR}/wrappers/gencmd echo" \
-   DESTDIR="${DESTDIR}" installworld
-  echo "set -e" > "${WRAPSCRIPT}"
+  . "${BASEDIR}/before/${tempfoo}.sub"
 fi
+
 make ${MAKE_ARGS} DESTDIR="${DESTDIR}" "${@}" "${tempfoo}"
+
+if [ -e "${BASEDIR}/after/${tempfoo}.sub" ]
+then
+  . "${BASEDIR}/after/${tempfoo}.sub"
+fi
+
 chmod 755 "${WRAPDIR}"
 
 echo "echo \"${tempfoo} completed successfully.\"" >> "${WRAPSCRIPT}"

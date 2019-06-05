@@ -1,0 +1,5 @@
+make ${MAKE_ARGS} WITHOUT_PROFILE=y WITHOUT_DEBUG_FILES=y \
+ WITHOUT_TESTS=y WITHOUT_MAN=y WITHOUT_INCLUDES=y \
+ INSTALL_CMD="${BASEDIR}/wrappers/gencmd echo" \
+ DESTDIR="${DESTDIR}" installworld > /dev/null
+echo "set -e" > "${WRAPSCRIPT}"

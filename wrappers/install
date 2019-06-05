@@ -77,15 +77,16 @@ hasarg() {
   return 1
 }
 
+icmd="install -N etc "
 tgt="`ntharg ${#} "${@}" | sed "s|^${DESTDIR}|\$\{DESTDIR\}|"`"
 case "${1}" in
 "-d")
-  printf 'install ' >> "${WRAPSCRIPT}"
+  echo -n "${icmd}" >> "${WRAPSCRIPT}"
   firstnargs $((${#} - 1)) "${@}" >> "${WRAPSCRIPT}"
   printf ' "%s"\n' "${tgt}" >> "${WRAPSCRIPT}"
   ;;
 "-l")
-  printf 'install ' >> "${WRAPSCRIPT}"
+  echo -n "${icmd}" >> "${WRAPSCRIPT}"
   src1="`ntharg $((${#} - 1)) "${@}" | head -c 1`"
   if [ "${src1}" = "/" ]
   then
@@ -113,8 +114,6 @@ case "${1}" in
     fi
     icmd="install -N \"${N_dirhash}\" "
     shift 2
-  else
-    icmd="install "
   fi
   nsrcs=0
   while [ ${nsrcs} -lt $((${#} - 1)) ]
@@ -155,7 +154,7 @@ case "${1}" in
       else
         install -m 644 -s "${src}" "${src_n}"
       fi
-      printf 'install ' >> "${WRAPSCRIPT}"
+      echo -n "${icmd}" >> "${WRAPSCRIPT}"
       firstnargs_fltrd $((${#} - ${nsrcs} - 1)) "${@}" >> "${WRAPSCRIPT}"
       printf ' "%s"' "${src_nshrt}" >> "${WRAPSCRIPT}"
       _nsrcs=$((${_nsrcs} - 1))

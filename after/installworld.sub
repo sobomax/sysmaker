@@ -1,0 +1,8 @@
+_NOP_CMD="${BASEDIR}/wrappers/gencmd echo"
+make PWD_MKDB_CMD="${_NOP_CMD}" INSTALL_CMD="install -U" \
+ SERVICES_MKDB_CMD="${_NOP_CMD}" DESTDIR="${DESTDIR}" distribution > /dev/null
+mkdir "${WRAPDIR}/etc"
+for f in master.passwd group
+do
+  cp -p "${DESTDIR}/etc/${f}" "${WRAPDIR}/etc/"
+done
