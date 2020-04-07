@@ -5,3 +5,4 @@ task:
   install_script: pkg install -y git
   script:
     - git clone https://github.com/freebsd/freebsd.git
+    - git clone https://github.com/sobomax/makeself.git
