@@ -43,7 +43,7 @@ chmod 755 "${WRAPDIR}"
 
 echo "echo \"${tempfoo} completed successfully.\"" >> "${WRAPSCRIPT}"
 
-COMPRESS_CMD="xz -T0 -v" UNCOMPRESS_CMD="xz -T0 -d" /usr/home/sobomax/projects/makeself/makeself.sh \
+COMPRESS_CMD="xz -T0 -v" UNCOMPRESS_CMD="xz -T0 -d" ${BASEDIR}/makeself/makeself.sh \
  --xz --tar-quietly ${DESTDIR}/${tempfoo}.wrap /tmp/${tempfoo}.wrap.sh \
  "${tempfoo} Package" "./${WSNAME}"
 rm -rf "${DESTDIR}"
