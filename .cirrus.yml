@@ -6,4 +6,5 @@ task:
   script:
     - git clone https://github.com/freebsd/freebsd.git
     - git clone https://github.com/sobomax/makeself.git
-    - ls
+    - cd freebsd
+    - ../distribution
