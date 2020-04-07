@@ -3,4 +3,5 @@ freebsd_instance:
 
 task:
   install_script: pkg install -y git
-  script: true
+  script:
+    - git clone https://github.com/freebsd/freebsd.git
