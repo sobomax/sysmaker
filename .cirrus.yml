@@ -2,10 +2,11 @@ freebsd_instance:
   image_family: freebsd-13-0-snap
 
 task:
+  timeout_in: 120m
   install_script: pkg install -y git
   script:
     - git clone https://github.com/freebsd/freebsd.git
     - git clone https://github.com/sobomax/makeself.git
-    - make -C freebsd buildworld
+    - make -C freebsd WITHOUT_TESTS=yes WITHOUT_DEBUG_FILES=yes buildworld
     - cd freebsd
-    - ../distribution
+    - env WITHOUT_TESTS=yes WITHOUT_DEBUG_FILES=yes ../distribution
