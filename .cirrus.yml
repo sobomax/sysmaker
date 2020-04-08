@@ -3,10 +3,13 @@ freebsd_instance:
 
 task:
   timeout_in: 120m
-  install_script: pkg install -y git
-  script:
+  install_script:
+    - pkg install -y git ccache
     - git clone https://github.com/freebsd/freebsd.git
     - git clone https://github.com/sobomax/makeself.git
+  build_cache:
+    folder: /usr/obj
+  script:
     - make -C freebsd WITHOUT_TESTS=yes WITHOUT_DEBUG_FILES=yes buildworld
     - cd freebsd
     - env WITHOUT_TESTS=yes WITHOUT_DEBUG_FILES=yes ../distribution
