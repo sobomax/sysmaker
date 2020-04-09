@@ -10,6 +10,6 @@ task:
   build_cache:
     folder: /usr/obj
   script:
-    - make -C freebsd WITHOUT_TESTS=yes WITHOUT_DEBUG_FILES=yes buildworld
+    - make -C freebsd WITHOUT_TOOLCHAIN=yes WITHOUT_TESTS=yes WITHOUT_DEBUG_FILES=yes buildworld
     - cd freebsd
-    - env WITHOUT_TESTS=yes WITHOUT_DEBUG_FILES=yes ../distribution
+    - env WITHOUT_TOOLCHAIN=yes WITHOUT_TESTS=yes WITHOUT_DEBUG_FILES=yes ../distribution
