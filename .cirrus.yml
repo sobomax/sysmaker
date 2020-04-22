@@ -10,6 +10,7 @@ task:
   build_cache:
     folder: /usr/obj
   script:
-    - make -C freebsd CFLAGS="-O0 -pipe" WITHOUT_TOOLCHAIN=yes WITHOUT_TESTS=yes WITHOUT_DEBUG_FILES=yes buildworld
+    - make -C freebsd CFLAGS="-O0 -pipe" WITHOUT_KERNEL_SYMBOLS=yes WITHOUT_TOOLCHAIN=yes WITHOUT_TESTS=yes WITHOUT_DEBUG_FILES=yes buildkernel
     - cd freebsd
-    - env WITHOUT_TOOLCHAIN=yes WITHOUT_TESTS=yes WITHOUT_DEBUG_FILES=yes ../distribution
+    - env WITHOUT_KERNEL_SYMBOLS=yes WITHOUT_TOOLCHAIN=yes WITHOUT_TESTS=yes WITHOUT_DEBUG_FILES=yes ../distribution
+    - env WITHOUT_KERNEL_SYMBOLS=yes WITHOUT_TOOLCHAIN=yes WITHOUT_TESTS=yes WITHOUT_DEBUG_FILES=yes ../installkernel
