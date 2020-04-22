@@ -1,6 +1,6 @@
-_NOP_CMD="${BASEDIR}/wrappers/gencmd echo"
-make PWD_MKDB_CMD="${_NOP_CMD}" INSTALL_CMD="install -U" \
- SERVICES_MKDB_CMD="${_NOP_CMD}" DESTDIR="${DESTDIR}" distribution > /dev/null
+_GCMD="${BASEDIR}/wrappers/gencmd"
+make PWD_MKDB_CMD="${_GCMD} pwd_mkdb" INSTALL_CMD="install -U" \
+ SERVICES_MKDB_CMD="${_GCMD} services_mkdb" DESTDIR="${DESTDIR}" distribution > /dev/null
 mkdir "${WRAPDIR}/etc"
 for f in master.passwd group
 do
